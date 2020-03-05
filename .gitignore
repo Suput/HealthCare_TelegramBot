@@ -122,3 +122,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+data.txt
+url.txt
+
+token.txt
+
+testing_field.py
