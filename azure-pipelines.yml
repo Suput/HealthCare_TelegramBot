@@ -35,11 +35,3 @@ steps:
 - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
   displayName: 'Upload package'
   artifact: drop
-
-- task: AzureWebApp@1
-  inputs:
-    appType: webApp
-    azureSubscription: $(azureServiceConnectionId)
-    appName: $(webAppName)
-    package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-  displayName: 'Deploy Azure Web App : {{ webAppName }}'
