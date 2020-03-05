@@ -39,5 +39,5 @@ steps:
     replaceExistingArchive: true
 
 - publish: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
-    displayName: 'Upload package'
-    artifact: drop
+  displayName: 'Upload package'
+  artifact: drop
