@@ -4,7 +4,7 @@ from signal import signal, SIGINT
 import requests
 from datetime import datetime as dt
 from hashlib import sha256
-from json import dumps
+from json import dumps, load
 from re import match
 
 
@@ -15,16 +15,18 @@ URL = None
 def get_token():
     global BOT_TOKEN
     if BOT_TOKEN is None:
-        with open("token.txt") as f:
-            BOT_TOKEN = f.readline()
+        with open("appsettings.json") as f:
+            res = load(f)
+            BOT_TOKEN = res["token"]
     return BOT_TOKEN
 
 
 def get_url():
     global URL
     if URL is None:
-        with open("url.txt") as f:
-            URL = f.readline()
+        with open("appsettings.json") as f:
+            res = load(f)
+            URL = res["url"]
     return URL
 
 
@@ -36,7 +38,7 @@ def check_input(text: str):
 
 
 def save_info(update, context):
-    logger.info(f"Data recieved: {update.message.text}")
+    logger.info("Data recieved: " + update.message.text)
     if not check_input(update.message.text):
         context.bot.send_message(
             chat_id=update.effective_chat.id,
@@ -50,13 +52,13 @@ def save_info(update, context):
         int(data[0].split("/")[1]),
         int(data[1])
     ]
-    logger.info(f"Data parsed: {data}")
+    logger.info("Data parsed: " + data)
     time_now = str(dt.now().isoformat())
     # with open("data.txt", "a") as f:
     #     f.write(f"{data[0]},{data[1]},{data[2]},{time_now}\n")
 
     # Make request
-    url = f"{get_url()}/api/user"
+    url = get_url() + "/api/user"
     headers = {
         "Content-Type": "application/json"
     }
