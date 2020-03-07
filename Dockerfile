@@ -8,4 +8,4 @@ RUN pip install -r ./requirements.txt
 
 COPY HealthCare_TelegramBot/app/bot.py .
 
-CMD python bot.py
+CMD python ./bot.py
