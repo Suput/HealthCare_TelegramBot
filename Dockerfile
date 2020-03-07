@@ -1,18 +1,10 @@
-FROM ubuntu:16.04
+FROM python:3
 
-COPY requirements.txt /
+COPY requirements.txt /app/
+COPY bot.py /app/
 
-RUN apt-get update && \
-    apt-get install -y sudo python3  python3-pip  python3-dev
-
-RUN pip3 install -r /requirements.txt
-
-RUN sudo apt-get -y update
-
-RUN sudo apt-get -y upgrade
-
-COPY app/ /app
+RUN pip install -r /app/requirements.txt
 
 WORKDIR /app
 
-CMD [ "./run.sh" ]
+CMD python bot.py
