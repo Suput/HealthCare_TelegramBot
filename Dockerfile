@@ -1,10 +1,11 @@
 FROM python:3
 
-COPY ./requirements.txt /app/requirements.txt
-COPY ./bot.py /app/bot.py
-
-RUN pip install -r /app/requirements.txt
-
 WORKDIR /app
+
+COPY requirements.txt /
+
+RUN pip install -r requirements.txt
+
+COPY app/bot.py /
 
 CMD python bot.py
