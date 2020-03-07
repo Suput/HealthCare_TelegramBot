@@ -52,7 +52,7 @@ def save_info(update, context):
         int(data[0].split("/")[1]),
         int(data[1])
     ]
-    logger.info("Data parsed: " + data)
+    logger.info("Data parsed: " + ", ".join([str(elem) for elem in data]))
     time_now = str(dt.now().isoformat())
     # with open("data.txt", "a") as f:
     #     f.write(f"{data[0]},{data[1]},{data[2]},{time_now}\n")
