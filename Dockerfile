@@ -2,10 +2,10 @@ FROM python:3
 
 WORKDIR /app
 
-COPY requirements.txt /
+COPY . .
 
 RUN pip install -r requirements.txt
 
-COPY app/bot.py /
+# COPY app/bot.py /
 
-CMD python bot.py
+CMD python app/bot.py
