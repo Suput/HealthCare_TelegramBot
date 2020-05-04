@@ -133,3 +133,7 @@ testing_field.py
 app/appsettings.json
 
 .vscode/
+
+app/test.png
+
+app/test.py
