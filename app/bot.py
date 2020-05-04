@@ -1,10 +1,10 @@
-from telegram.ext import MessageHandler, Filters, Updater
+from telegram.ext import MessageHandler, Filters, Updater, CommandHandler
 import logging
 from signal import signal, SIGINT
 import requests
 from datetime import datetime as dt
 from hashlib import sha256
-from json import dumps, load
+from json import dumps, load, loads
 from re import match
 
 
@@ -19,6 +19,10 @@ def get_token():
             res = load(f)
             BOT_TOKEN = res["token"]
     return BOT_TOKEN
+
+
+def get_sha_token():
+    return str(sha256(get_token().encode()).hexdigest())
 
 
 def get_url():
@@ -54,8 +58,6 @@ def save_info(update, context):
     ]
     logger.info("Data parsed: " + ", ".join([str(elem) for elem in data]))
     time_now = str(dt.now().isoformat())
-    # with open("data.txt", "a") as f:
-    #     f.write(f"{data[0]},{data[1]},{data[2]},{time_now}\n")
 
     # Make request
     url = get_url() + "/api/user"
@@ -68,7 +70,7 @@ def save_info(update, context):
         "Dia": data[1],
         "Pulse": data[2],
         "DateTime": time_now,
-        "Token": str(sha256(get_token().encode()).hexdigest())
+        "Token": get_sha_token()
     }
 
     request = requests.post(
@@ -92,9 +94,36 @@ def save_info(update, context):
     return
 
 
+def get_info(update, context):
+    url = get_url() + "/api/user/" + str(update.effective_user.id)
+    url += "/" + get_sha_token()
+    response = requests.get(url=url)
+
+    logger.info(response.text)
+    logger.info(response.status_code)
+    
+    if response.status_code != 200:
+        context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text="Error while getting data"
+        )
+        return
+
+    data = loads(response.text)
+    answer = "Среднее систолическое: " + "{:.2f}".format(data['averageSys']) + '\n'
+    answer += "Среднее диастолическое: " + "{:.2f}".format(data['averageDia']) + '\n'
+    answer += "Средний пульс: " + "{:.2f}".format(data['averagePulse']) + '\n'
+    context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=answer
+    )
+
+
 updater = Updater(token=get_token(), use_context=True)
 dispatcher = updater.dispatcher
 
+# Handlers
+dispatcher.add_handler(CommandHandler("get_info", get_info))
 dispatcher.add_handler(MessageHandler(Filters.text, save_info))
 
 # logger configuration

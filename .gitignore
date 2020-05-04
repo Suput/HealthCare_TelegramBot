@@ -131,3 +131,5 @@ token.txt
 testing_field.py
 
 app/appsettings.json
+
+.vscode/
