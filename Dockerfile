@@ -2,6 +2,7 @@ FROM python:3
 
 WORKDIR /app
 
+COPY HealthCare_TelegramBot/font.ttf .
 COPY HealthCare_TelegramBot/requirements.txt .
 
 RUN pip install -r ./requirements.txt
